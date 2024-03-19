@@ -8,7 +8,7 @@ from scipy import signal
 from scipy.io import wavfile
 from detection import detect_entropyratio
 
-samplerate, data = wavfile.read('./data/labeled/glu397_21_p12_2_0.WAV')
+samplerate, data = wavfile.read('Path_to_wav_file/Example.WAV')
 
 # spectrogram parameters
 WINDOWLENGTH = 256    # 250 = 1ms
