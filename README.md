@@ -1,11 +1,16 @@
 # Neonatal_USV_Detection_Classifiacation
-Algorithms for detecting and classifying neonatal ultrasonic vocalizations.
+This repository contains algorithms designed for detecting and classifying neonatal ultrasonic vocalizations.
 
+%%%%%%%
 Welcome
+%%%%%%%
 
-The first step is to calibrate the detection algorithm to match the setting of your recordings. 
+We encourage you to clone the entire repository to your local machine.
 
-Install the following programs with the precise Version:
+#Environment Setup
+Create a New Environment (Conda): Set up a new environment using Conda and install all necessary dependencies, including Jupyter Lab, for later execution.
+
+Install Required Programs:
 absl-py                  2.1.0
 aiofiles                 22.1.0
 aiohttp                  3.9.3
@@ -172,3 +177,19 @@ y-py                     0.5.9
 yarl                     1.9.4
 ypy-websocket            0.8.2
 zipp                     3.15.0
+
+Note: Ensure to install the specified versions for each program listed above.
+
+#Calibration
+The first step involves calibrating the detection algorithm to match the settings of your recordings. Follow these steps:
+
+Run Maeuse_dash_entropyratio.py: Utilize the Maeuse_dash_entropyratio.py program from the repository.
+Define Path to .WAV Files: Set a new path to your personal .WAV files inside Maeuse_dash_entropyratio.py and save the file.
+Activate the Program: Open your shell (Windows) or terminal (Mac), navigate to your local repository, and run the command python Maeuse_dash_entropyratio.py.
+Access Link: The shell or terminal will provide a link (usually starting with https://...). Copy this link and open it in your preferred browser (e.g., Safari).
+Adjust Parameters: Modify the parameters ENTROPYTHRESHOLD, RATIOTHRESHOLD, NDETECT, and NGAP to fit your requirements.
+Update Values: Update these values in the detection.py file.
+Start Jupyter Lab: Launch Jupyter Lab, open the Rudolf_Net.ipynb file, and execute the code.
+
+#Result Analysis
+Upon execution, a "results" folder will be automatically created within your local repository, containing a .csv file with the results. Additionally, an "images" folder will include visualizations of all considered spectrograms for manual proofreading.
