@@ -1,0 +1,42 @@
+---------------------------glu397_9874_p8_4_1----------------------------
+ours
+precision: 0.40425531914893614
+recall: 0.3435804701627486
+true_positives: 190
+false_positives: 280
+false_negatives: 363
+---------------------------r142l_144_p4_4_1----------------------------
+ours
+precision: 0.7008547008547008
+recall: 0.6165413533834586
+true_positives: 82
+false_positives: 35
+false_negatives: 51
+---------------------------glu397_9874_p8_2_0----------------------------
+ours
+precision: 0.20675105485232068
+recall: 0.1991869918699187
+true_positives: 49
+false_positives: 188
+false_negatives: 197
+---------------------------r142l_144_p4_5_0----------------------------
+ours
+precision: 0.3146853146853147
+recall: 0.3103448275862069
+true_positives: 45
+false_positives: 98
+false_negatives: 100
+---------------------------r142l_133_p12_1_0----------------------------
+ours
+precision: 0.0958904109589041
+recall: 0.15555555555555556
+true_positives: 7
+false_positives: 66
+false_negatives: 38
+---------------------------r142l_129_p12_1_0----------------------------
+ours
+precision: 0.25
+recall: 0.21764705882352942
+true_positives: 37
+false_positives: 111
+false_negatives: 133
