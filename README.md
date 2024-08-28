@@ -12,7 +12,7 @@ Create a New Environment (Conda): Set up a new environment using Conda and insta
 
 You can install the required packages by running: pip install -r requirements.txt
 This will install the dependencies as well as the jupyter kernel
-By default the latest pytorch version as of 17.05.2024 will be installed, but the code should also work with older versions.
+By default the latest PyTorch version as of 17.05.2024 will be installed, but the code should also work with older versions.
 
 By default the code will run on the gpu, if one is available, otherwise it will run on the cpu (see config.py).
 
