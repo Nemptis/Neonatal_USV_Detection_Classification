@@ -16,7 +16,7 @@ except ImportError as e:
     import pytorch_lightning as pl
 
 
-from utils import parse_metadata, get_file_list#, temporal_cleanup
+from utils.utils import parse_metadata, get_file_list#, temporal_cleanup
 
 
 

@@ -11,7 +11,7 @@ from mel_dataset import MouseAudioDataset_RegularSpectrogram
 from classification_net_cnn import classification_net_cnn_image_lightning, classification_net_cnn_image_lightning_EfficentNetB5
 
 
-from utils import get_file_list
+from utils.utils import get_file_list
 from config import DEVICE
 from pathlib import Path
 

@@ -10,7 +10,7 @@ import numpy as np
 from scipy import signal
 from scipy.io import wavfile
 from detection import detect_entropyratio
-from utils import save_csv
+from utils.utils import save_csv
 
 # spectrogram parameters
 WINDOWLENGTH = 256  # 250 = 1ms
