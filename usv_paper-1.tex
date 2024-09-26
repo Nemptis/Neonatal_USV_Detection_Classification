@@ -1,0 +1,844 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  JASA LaTeX Template File
+%  To make articles using JASA.cls, Version 1.2
+%  April 14, 2021
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Step 1:
+%% Uncomment the style that you want to use:
+
+%%%%%%% For Preprint
+%% For manuscript, 12pt, one column style.  Preprint is required for submission.
+
+%% Comment this out if you'd rather use another style:
+
+\documentclass[preprint,NumberedRefs]{JASA}
+%%%reprint for double columned
+
+% use line numbers
+\usepackage{lineno}
+\usepackage{stackrel}
+\usepackage{comment}
+
+\linenumbers
+
+\usepackage{siunitx} % for nicely formatted numbers and units
+
+
+%%%%% Preprint Options %%%%%
+%% The track changes option allows you to mark changes
+%% and will produce a list of changes, their line number
+%% and page number at the end of the article.
+%\documentclass[preprint,trackchanges]{JASA}
+
+
+%% NumberedRefs is used for numbered bibliography and citations.
+%% Default is Author-Year style.
+%% \documentclass[preprint,NumberedRefs]{JASA}
+
+%%%%%%% For Reprint
+%% For appearance of finished article; 2 columns, 10 pt fonts.
+%% Also used for estimating print page length.
+
+% \documentclass[reprint]{JASA}
+
+%%%%% Reprint Options %%%%%
+
+%% NumberedRefs is used for numbered bibliography and citations.
+%% Default is Author-Year style.
+% \documentclass[reprint,NumberedRefs]{JASA}
+
+%% TurnOnLineNumbers
+%% Make lines be numbered in reprint style:
+%\documentclass[reprint,TurnOnLineNumbers]{JASA}
+
+\usepackage{placeins}
+
+\begin{document}
+%% the square bracket argument will send term to running head in
+%% preprint, or running foot in reprint style.
+
+\title[]{Enhancing the analysis of murine neonatal ultrasonic vocalizations: Development, evaluation, and application of different mathematical models}
+%The title must be in sentence case (i.e., lower case with only the first word and proper names capitalized)
+% ie
+%\title[JASA/Sample JASA Article]{Article title should be less than 17 words, no acronyms}
+
+\author{Rudolf Herdt}
+\affiliation{Center for Industrial Mathematics,  University of Bremen, Bremen 28334, Germany}
+\author{Louisa Kinzel}
+\affiliation{Center for Industrial Mathematics,  University of Bremen, Bremen 28334, Germany}
+\author{Johann Georg Maaß}
+\email{johann.maass@med.uni-heidelberg.de}
+\affiliation{Institute of Human Genetics,  University of Heidelberg, Heidelberg 69120, Germany}
+\affiliation{Also at: Interdisciplinary Neurobehavioral Core, University of Heidelberg, Heidelberg, 69120,
+Germany}
+\author{Marvin Walther}
+\affiliation{Institute of Electrodynamics and Microelectronics,  University of Bremen, Bremen 28334, Germany}
+\author{Henning Fröhlich}
+\affiliation{Institute of Human Genetics,  University of Heidelberg, Heidelberg 69120, Germany}
+\author{Tim Schubert}
+\affiliation{Institute of Human Genetics,  University of Heidelberg, Heidelberg 69120, Germany}
+\author{Peter Maass}
+\affiliation{Center for Industrial Mathematics,  University of Bremen, Bremen 28334, Germany}
+\author{Christian Patrick Schaaf}
+\affiliation{Institute of Human Genetics,  University of Heidelberg, Heidelberg 69120, Germany}
+
+
+%ORCID
+% PM https://orcid.org/0000-0003-1448-8345
+% CPS https://orcid.org/0000-0002-2148-7490
+% HF
+% JM https://orcid.org/0009-0006-2069-5470
+% MW https://orcid.org/0009-0002-8047-219X
+% LK https://orcid.org/0000-0002-0271-175X
+% RH 0009-0003-7537-3645
+% TS 0009-0003-1696-4402
+
+
+% ie
+%\author{Author One}
+%\author{Author Two}
+%\author{Author Three}
+
+% ie
+%\affiliation{Humangenetics,  University Heidelberg, Heidelberg, State ZipCode, Germany}
+
+%\altaffiliation{}
+
+% may be added after \author{}, ie
+% \altaffiliation{Also at: Department1,  University1, City, State ZipCode, Country.}
+
+%% for corresponding author
+
+
+%% For preprint only,
+%  optional, if you want want this message to appear in upper right corner of title page
+% \preprint{}
+
+%ie
+%\preprint{Author, JASA}
+
+% optional, if desired:
+%\date{\today}
+
+\begin{abstract}
+
+Rodents employ a broad spectrum of ultrasonic vocalizations (USVs) for social communication. As these vocalizations offer valuable insights into affective states, social interactions, and developmental stages of animals, various deep learning approaches have aimed at automating both the quantitative (detection) and qualitative (classification) analysis of USVs. So far, no notable efforts have been made to determine the most suitable architecture. We present the first systematic evaluation of different types of neural networks for USV classification. We assessed various feedforward networks, including a custom-built, fully-connected network, a custom-built convolutional neural network, several residual neural networks (ResNets), an EfficientNet, and a Vision Transformer (ViT). Our analysis concluded that convolutional networks with residual connections, specifically adapted to USV data, are the most suitable architecture for analyzing USVs. Paired with a refined, entropy-based detection algorithm (achieving recall of \(94.9\,\mathrm{\%} \) and precision of \(99.3\,\mathrm{\%} \)), the best architecture (achieving \(86.79\,\mathrm{\%} \) accuracy) was integrated into a fully automated pipeline capable of analyzing extensive USV datasets with high reliability. In ongoing projects, our pipeline has proven to be a valuable tool in studying neonatal USVs. By comparing these distinct deep learning architectures side by side, we have established a solid foundation for future research.
+
+
+%Category for JASA: SIGNAL PROCESSING IN ACOUSTICS
+
+%Keywords for publication
+% Ultrasonic vocalization
+% Neural networks
+% Explainable artificial intelligence
+% Binary Classification
+% Multiclass Classification
+% Spectral Entropy
+% Deep Learning
+% Audio classification
+
+
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}
+\label{sec:Introduction}
+
+Mice, rats, and other rodents communicate through both audible and ultrasonic ($> 20\,\mathrm{kHz}$) vocalizations. While audible vocalizations are typically associated with expressions of fear, stress or anxiety, USVs occur in contexts such as courtship, isolation, and territorial conflicts, playing a crucial role in the social interactions of these animals. \cite{Yao2023-ga} Mice, in particular, produce a diverse range of USVs that vary in duration, frequency, and modulation. These vocalizations undergo changes throughout the developmental stages, following an ontogenetic trajectory. \cite{Elwood1982-vo} Both the quantity and quality of USVs offer valuable insights into the well-being, developmental progress, and social behaviors of mice. \cite{Portfors2007-kn, Peleh2019-ic, Scattoni2008-vp} Notably, anomalies in USVs have been documented in genetic mouse models of autism, schizophrenia, and Down syndrome. \cite{Ey2013-sm, Scattoni2009-zx, Holtzman1996-vf} Given their high informational content, the study of call behavior has gained significant attention and has become an established tool in behavioral neuroscience and pharmacology. \cite{Dirks2002-hy} 
+
+To date, the correlation between specific situations or affective states and different types of USVs remains an active area of research. One of the key motivations for this paper is to contribute to this ongoing investigation. Although recording USVs is a relatively simple and quick process, the analysis of these recordings has traditionally been labor-intensive, which has limited the scientific potential of such experiments. Conventional methods for manual quantification (call detection) and qualitative analysis (call classification) can require up to two hours to analyze a mere five-minute recording. Furthermore, datasets analyzed manually often suffer from low interrater reliability.
+
+New mathematical deep learning models now make it possible to both detect and classify calls, hence speeding up the process and improving the reliability significantly. So far, most efforts have focused on automating the analysis of USVs emitted by rats or adult mice in the context of both affective and aversive states. \cite{Coffey2019-ve,Pessoa2022-sy} USVs produced by pups and adults differ significantly; therefore, this paper focuses specifically on neonatal USVs.
+
+Studying neonatal USVs in mice offers a unique opportunity to explore the early developmental aspects of acoustic communication deficits, providing valuable insights into the underlying mechanisms of autism-like behavior. \cite{Takumi2020-nc} These early vocalizations, occurring while the mice are deaf (typically until P10), are largely innate, making them particularly important for research in neurodevelopment and pharmacology. As such, neonatal USVs are believed to reflect the internal state of the animals and offer crucial information about the changes during ontogeny and the characteristics of vocal development. \cite{Ehret2005-ns}
+
+When pups are separated from their mother, they produce a large quantity and variety of USVs to prompt retrieval by the mother. \cite{Ehret2005-ns} The diverse nature of these calls, combined with the inevitable presence of background noise, complicates the analysis. Even advanced models, as reviewed by Pessoa et al. in 2022, struggle to achieve high levels of both recall and precision. \cite{Pessoa2022-sy} The classification of neonatal USVs is particularly challenging due to the evolving distribution of call classes over time. \cite{Peleh2019-ic} Various research groups have explored different mathematical models and neural network architectures - such as threshold-based, fully connected, convolutional neural networks (CNNs), and recurrent networks — to detect and classify these calls. \cite{Pessoa2022-sy,Goussha2021-wm,Coffey2019-ve, De_Chaumont2021-ry, Fonseca2021-qr} However, many of these neural networks were originally developed for image classification, and different data types often require specialized algorithms. Studies have shown that deeper architectures, while effective in vision tasks, do not necessarily perform well in audio tasks. \cite{Koutini_2021} To determine the most suitable network type for USV classification, a side-by-side analysis of different network architectures is essential.
+
+While our primary motivation is to systematically determine which type of architecture is best suited for the analysis of neonatal USVs, we have also integrated our findings into a fully automated pipeline. In the initial step, we developed an algorithm capable of reliably detecting USVs in recordings. For the subsequent classification, we built and tested various neural network architectures to identify the most effective model for this specific task. Ultimately, we combined the detection and classification algorithms into a comprehensive pipeline that can automatically quantify and classify calls in pup recordings using advanced mathematical models.
+
+In this paper, we present the first systematic evaluation of various neural network architectures for USV classification. We conducted an in-depth analysis of the network structures, surpassing previous studies, to identify the key features influencing decision-making. This thorough analysis aims to enhance the acceptance and understanding of AI-driven decisions in the context of USV classification. 
+
+Finally, we analyzed USV data from an ongoing phenotypization project and were able to demonstrate the efficacy of the algorithm. Our work provides valuable insights into how different deep learning models process acoustic data. 
+
+\section{Material}
+\label{sec:Material}
+
+\subsection{Signal acquisition setup}
+\label{sec:Signal_acquisition_setup}
+
+Recordings were made using an UltraSoundGate condenser microphone (CM16/CMPA, Avisoft Bioacoustics) connected to a computer via an Avisoft UltraSoundGate USG416H audio device. The USV signals were recorded using Avisoft-RECORDER software (Avisoft Bioacoustics) at a sampling rate of \(250\,\mathrm{kHz} \) and stored in WAV file format. The microphone was positioned close to the ceiling of a \(42 \times 42 \times 42\,\mathrm{cm}\) wide sound-attenuating cube, \(30\,\mathrm{cm} \) above the ground. The room temperature was set to 22°C, and the experimenter ensured that there were no disturbing noises.
+
+\subsection{Dataset}
+\label{sec:Dataset}
+
+We used USV recordings from an ongoing phenotypization study comparing three heterozygous mouse lines harboring different pathogenic variants in \textit{Nr2f1} which have been shown to be associated with autism-like behavior in mice.  All lines have a C57BL/6J background, as Peleh et al. have shown that the background is suitable for the analysis of USVs in pups. \cite{Peleh2019-ic}
+
+The animals were housed at the Interdisciplinary Neurobehavioral Core (INBC) of Heidelberg University on a 12-hour dark-light cycle. They had ad libitum access to food and water throughout the experiments. Tests were always conducted at the same time.
+Recordings were made at three different postnatal (P) ages: P4, P8, and P12. We included both males and females. At P2, animals were tattooed for identification.
+
+We utilized two distinct datasets in our study:
+
+\textbf{1. D-Dataset:} Comprises manually detected calls from a total of 36 recordings, which were utilized for developing and validating the detection algorithm.
+
+\textbf{2. C-Dataset:} Comprises 29 recordings that were manually classified and used to train and test the different classification algorithms.
+
+For the distribution of call classes see \autoref{tab:datasets_overview}. Manual detection and classification were conducted using SASLabPro Avisoft (Avisoft Bioacoustics).
+
+\subsection{Syllable classes}
+\label{sec:Syllable_classes}
+
+We adopted the call categories outlined by Scattoni et al. (2008), further refined by Grimsley et al. (2011), and extensively examined by Peleh et al. (2019), as the latter study was also conducted at the INBC. \cite{Scattoni2008-vp,Peleh2019-ic,Grimsley2011-hx} Building on these categories, we consolidated similar classes based on our own observations resulting in the following five categories:
+
+\begin{itemize}
+    \item \textbf{Class 1 Flat:} Calls with a modulation in frequency \textless \(6\,\mathrm{kHz} \).
+    \item \textbf{Class 2 Modulated:} Calls with a modulation in frequency \textgreater \(6\,\mathrm{kHz} \).
+    \item \textbf{Class 3 Frequency Step:} Calls with an instantaneous frequency change without any interruption in time.
+    \item \textbf{Class 4 Composite:} Calls with two harmonically independent components emitted simultaneously.
+    \item \textbf{Class 5 Short:} Calls with a duration \textless 5 ms.
+\end{itemize}
+
+In contrast to the approach by Peleh et al., we consolidated calls with two or more simultaneous frequencies (harmonics and composite), those with an absolute frequency modulation exceeding \(6\,\mathrm{kHz}\) (complex, chevron, upward, and downward), and calls involving a frequency change without temporal interruption (two-syllable and frequency step). Short calls and those with a constant frequency were maintained as distinct classes.
+
+Overall, there is no clear consensus in the field regarding the definition of call classes; for instance, "upward calls" are defined differently by various research groups. \cite{Grimsley2011-hx, Scattoni2008-vp}
+
+Our strategic consolidation was designed to increase the number of calls within each category, thereby enhancing the statistical power and reliability of our analyses. This approach aimed at improving the robustness of our tests, enabling a more thorough and credible evaluation of the different deep learning architectures.
+
+Examples for each class can be seen in \autoref{fig:classes}. Whereas most calls can be easily classified, some are indistinguishable as they fall on the verge between two definitions. Such calls were not included in dataset C.
+
+\begin{figure}[ht]
+    \begin{center}
+    \includegraphics[width = .85\textwidth]{Fig1_all_classes.png}
+    \caption{\label{fig:classes}{Overview of the five classes.}}
+    \end{center}
+\end{figure}
+
+Pooling was essential because the relative distribution of call categories changes throughout development, with some classes (e.g., two-syllable or chevron) being significantly less prevalent in pups than in adolescent animals. \cite{Peleh2019-ic} Additionally, certain classes represent only a small fraction of calls; for instance, harmonics, two-syllable, and composite calls collectively account for less than \(10\,\mathrm{\%}\) of USVs in C57BL/6J pups. \cite{Scattoni2008-vp} By pooling similar call categories, we ensured that each category was supported by a sufficiently large dataset. Subsequent analyses confirmed that pooling did not hinder the detection of subtle differences in USV quality (see \autoref{research_example}). However, it is important to recognize that five classes are not comprehensive enough to represent the entire spectrum of USVs.
+
+\section{Methods}
+\label{sec:Methods}
+
+\subsection{Structure of the pipeline}
+\label{sec:Structure_of_the_pipeline}
+
+In the following section, we outline the structure of our pipeline used for developing and testing the various architectures. Our segmentation and classification code is accessible online through this \href{https://github.com/Nemptis/Neonatal_USV_Detection_Classification.git}{GitHub} repository. \autoref{fig:pipeline_overview} illustrates the comprehensive methodological pipeline.
+
+The two basic building blocks of this pipeline are aimed at 1. extracting short acoustic signals containing only a single call (detection) followed by an analysis block aimed at 2. characterizing the type of call (classification).
+
+When describing these two blocks in more detail, we have to distinguish between a. the development and b. the assessment phase of the pipeline. The development phase will be discussed in detail in \autoref{sec:Neural_networks_for_USV_Classification}. The assessment phase uses a simple pipeline, as depicted in \autoref{fig:pipeline_overview}. The same illustrated pipeline was used to assess all deep learning architectures tested in this paper.
+
+\begin{figure}[ht]
+    \begin{center}
+    \includegraphics[width = .85\textwidth]{Fig2_pipeline_overview_07.pdf}
+    \caption{\label{fig:pipeline_overview}{Overview of the final pipeline.}}
+    \end{center}
+\end{figure}
+
+\subsection{Segmentation, detection}
+\label{sec:Segmentation-Detection}
+
+The first step in our workflow is the detection of individual ultrasonic vocalizations. In principle, each recording has to be segmented into periods of vocalization and silence. It is important to note that complete silence is difficult to achieve, and a varying level of background noise cannot be avoided.
+
+\begin{figure}[ht]
+    \begin{center}
+    \includegraphics[width = .5\textwidth]{Fig3_Figure_manual_vs_automativ.png}
+    \caption{\label{fig:manual_vs_automativ}{
+        A spectrogram showing three calls. The original audio signal was recorded at \(250\,\mathrm{kHz} \). The spectrogram was then computed using a short-term Fourier transform (STFT) with a Tukey window, shape parameter 0.25, and a segment length of 256 with no overlap. The figure shows annotations from both the automatic detection (green and red) and the manual detection (orange). (Color online)}
+    }
+    \end{center}
+\end{figure}
+
+In order to access discriminating features more easily, the original measurement, i.e., the acoustic pressure wave recorded by the microphone, is converted into a spectrogram. A spectrogram $S(t,f)$ depicts the active frequencies $f$ for each point in time $t$.
+
+In our analysis, the spectrogram representation is computed by a short-term Fourier transform (STFT) using a Tukey window with a shape parameter of 0.25, a segment length of 256, and a discrete Fourier transform of length 256 with no overlap. This results in a temporal resolution of slightly more than \(1\,\mathrm{ms} \).
+
+Taking the square of the STFT values then yields the energy spectrogram \(S(t,f)\). The detection algorithm relies on the definition of features of \(S(t,f)\) that enable precise determination of the moment a vocalization starts and ends.
+
+Our main feature is spectral entropy. As a measure of the power distribution in the frequency domain, entropy enables differentiation between vocalizations and noise at each time step in the spectrogram. Vocalizations generally only have energy in a very narrow frequency band (low entropy), while noise generally has a dispersed energy spectrum (high entropy).
+As background noise is generally restricted to frequencies below \(40\,\mathrm{kHz} \), we compute the spectral entropy in the range between 40 and \(110\,\mathrm{kHz} \) in order to discard low-frequency noise (e.g., mouse movements). We call this restricted part of the spectrogram \(S^h(t,f)\), where \(t\) ranges in discrete time steps between 0 and the length of the recording, and \(f\) ranges in discrete frequency steps between 40 and \(110\,\mathrm{kHz} \). Then the spectral entropy \(H(t)\) is computed by normalization:
+    \begin{equation}
+    P(t,f) = \frac{S^h(t,f)}{\sum_{f'} S^h(t,f')},
+    \end{equation}
+    and the subsequent calculation of the standard entropy:
+    \begin{equation}
+    H(t) = - \sum_f P(t,f) \log P(t,f).
+    \end{equation}
+To enhance this detection, we incorporated the energy at different frequency ranges as additional features, for example:
+$$E^h(t)=\sum_{f=40}^{110}  S(t,f) \ \ \ \mbox{or} \ \ \  E^l(t)=\sum_{f=0}^{39} S(t,f).$$
+The first value, $E^h(t)$, denotes the energy of the signal in the typical range of mouse vocalization. The second, low-frequency value, $E^l(t)$, serves as an indicator for the background noise.
+However, a simple threshold on these values did not significantly improve the accuracy of the detection. Better results were obtained by thresholding the ratio $R(t)$.
+     \begin{equation}
+    R(t) = \frac{E^h(t)}{E^l(t)}.
+    \end{equation}
+\autoref{fig:spectrogram_600} illustrates the entropy and the ratio threshold. Combined, they yield an intermediate detection indicator $i(t)$, which takes a value of $0$ or $1$ for each time $t$, indicating whether the spectral entropy and the energy ratios are above or below the threshold. In our experiments, we fixed the threshold to 3.5, and a $1$ was assigned to $i(t)$ if $H(t) \leq T_H$ and $R(t) \geq T_R$.
+
+\begin{figure}[ht]
+    \begin{center}
+    \includegraphics[width = .85\textwidth]{Fig4_Figure_spectrogram_600.png}
+    \caption{\label{fig:spectrogram_600}{Example of the detection algorithm with corresponding thresholds. (Color online)}}
+    \end{center}
+\end{figure}
+
+Building on the work of Pessoa et al. we present an improved detection algorithm by introducing additional features like energy ratios, employing a combined threshold approach for better noise filtering, and refining post-processing steps to enhance accuracy. We fuse very short gaps in the detection, which sometimes occur toward the quieter end of a vocalization, and we delete very short detections as they are likely noise. For this purpose, we define two parameters $N_{g}$ and $N_{d}$ and fuse gaps if they are shorter than $N_{g}$ time steps, and delete detections completely if they are shorter than $N_{d}$ time steps. The final output is a list of start and end points of all vocalizations in a recording.
+
+After fixing the parameters of the algorithm, we evaluated its performance on 6 recordings, i.e., \(30\,\mathrm{min.}\) of USV measurements, which were not used in the development of the algorithm. Manual annotation resulted in a set of 2,260 calls. The automatic detection algorithm returned a list of 2,161 calls. 2,146 calls were detected correctly, and 15 calls were false positives. Upon closer inspection, 10 out of those 15 false positives were "one call as two", i.e., a longer call was detected as two short calls. Moreover, 91 calls which were not detected were merged with another close by call, "two calls as one". That is, the calls were detected but not as separate calls. An example of "two calls as one" can be seen in the seventh USV in \autoref{fig:spectrogram_600}. Overall, this results in a recall of \(94.9\,\mathrm{\%} \) and a precision of \(99.3\,\mathrm{\%} \). Additionally, we conducted a comparative analysis of previously published detection algorithms on challenging and noisy recordings. Our entropy-based approach performed very well, showing no disadvantage compared to deep learning-based neural networks. For further details, refer to \autoref{tab:benchmarking}.
+
+We also conducted an analysis on how well the algorithm detects the starting and endpoints of the call, which are used for determining the length of the call, but also for extracting the related snippets of the full recording as input for subsequent classification. On average, the starting point detected by the algorithm was delayed by \(0.7\,\mathrm{ms} \), the endpoint was also delayed by an average of \(5.2\,\mathrm{ms} \). A visualization of these minor discrepancies can be seen in \autoref{fig:manual_vs_automativ}. When extracting the snippets for the classification, we added a padding.
+
+As experimental settings may vary between institutions, we offer an interactive app that allows users to test and optimize the parameters of the detection algorithm individually.
+
+\subsection{Neural networks for USV classification}
+\label{sec:Neural_networks_for_USV_Classification}
+
+Deep learning concepts based on neural networks have become the gold standard for a wide range of classification tasks. \cite{Aggarwal_2018} We evaluate an FNN, several CNN and a ViT model for classification.
+Classification of the calls could be performed on pre-manufactured features, like done in Pessoa et al. \cite{Pessoa2022-sy}
+We opted to utilize the whole spectrogram instead of those pre-manufactured features and relied on the neural network to extract the features it needs for classification.
+%
+The only feature explicitly used, aside from the spectrograms, is the call duration.
+%
+While there exist pretrained models trained on ImageNet, we choose to train all our models from scratch using only our USV data (due to the domain difference of natural images vs audio).
+
+\subsubsection{Fully connected neural networks for USV classification (FNN)}
+\label{sec:FNN}
+
+\paragraph{Architecture}
+\label{sec:Architecture_FNN}
+
+The network is structured around blocks centered on fully connected layers, each consisting of a batch normalization layer, a fully connected layer, a ReLU activation function, and a dropout layer, see \autoref{fig:FNN_architecture}.
+Notably, the initial three blocks exclusively receive the downsampled spectrogram \(S\) as input.
+However, the relative duration information \(T\) is integrated into the network in the penultimate layer, effectively forming a Y-shaped architecture.
+This design artificially increases the importance of the temporal feature.
+
+\begin{figure}[htb]
+    \includegraphics[width=0.85\textwidth]{Fig5_Figure_model_architecture_fully_connected.pdf}
+    \caption{Network architecture of the FNN used for USV classification.}
+    \label{fig:FNN_architecture}
+\end{figure}
+
+\paragraph{Data Preprocessing}
+\label{sec:Data_preprocessing_FNN}
+
+Initially, the USV signals are padded with a duration of \(10\,\mathrm{ms} \) at the beginning and end to mitigate any potential signal loss during analysis.
+Subsequently, spectrograms are computed from the padded signals using methods outlined in the detection section, resulting in frequency resolutions of \(129\) bins.
+The spectrograms are then converted to a decibel (dB) scale, with a clipping threshold set at \(80\,\mathrm{dB} \) to control for signal amplification.
+Notably, the horizontal (time) resolution of the resulting spectrograms varies around an average of \(51.4\) pixels, with a standard deviation of \(24.51\) pixels (\(1\) pixel\,\(\approx 1\) ms).
+To ensure consistency across samples, the spectrograms are normalized to fall within the range of \([0, 1]\), utilizing standard min-max normalization:
+    \[S \gets \frac{S-\min(S)}{\max(S-\min(S))} \ .\]
+
+During training, the spectrograms are shortened by a random number of pixels ranging from \(0\) to \(9\) at the start and end to account for potential inaccuracies in the detected start and end points of the vocalization.
+Conversely, during testing, spectrograms are shortened by \(4\) pixels symmetrically, resulting in an effective padding of approximately \(6\,\mathrm{ms} \).
+Following this, spectrograms are resized to a constant resolution of \(48\times 8\) pixels.
+
+This resolution was chosen based on a test cycle for different resolutions. For all horizontal resolutions tested, the original vertical resolution of the full spectrogram was set to \(129\) (the original resolution), and for all vertical resolutions tested, the horizontal resolution was set to \(128\).
+Only less than \(4\,\mathrm{\%} \) of our data have an original resolution higher than \(128\) pixels, making this a valid maximum resolution.
+Starting from these normalized spectrograms, we then computed downscaled spectrograms by averaging over neighboring pixels of the spectrogram.
+As seen in \autoref{fig:Y-Net_res_test}, the highest accuracy is achieved for a vertical resolution of \(48\) pixels and a horizontal resolution of \(8\).
+This was flattened into the 1-dimensional feature vector of length \(384\) and used as the input \(S\).
+
+To normalize sequence lengths, each USV duration is divided by the maximum observed length, which is approximately \(150\,\mathrm{ms} \), resulting in the relative duration \(T\).
+As usual, we randomly add noise to the training data for stabilizing the learning process; we used \(5\,\mathrm{\%} \) additive noise with a normal distribution.
+
+\begin{figure}[htb]
+    \begin{minipage}[t]{0.49\textwidth}
+        \includegraphics[width=\textwidth]{Fig6a_Figure_Y-Net-T_evaluation_resolution_frequency.pdf}
+    \end{minipage}
+    \begin{minipage}[t]{0.49\textwidth}
+            \includegraphics[width=\textwidth]{Fig6b_Figure_Y-Net-T_evaluation_resolution_time.pdf}
+    \end{minipage}
+    \caption{Evaluation of horizontal (time) and vertical (frequency) resolution.(Color online)}
+\label{fig:Y-Net_res_test}
+\end{figure}
+
+\paragraph{Training and Regularization}
+\label{sec:Training_and_REgularization_FNN}
+
+For training, we use regularization through the use of the Adam optimizer with weight decay, as proposed by Loshchilov and Hutter, with a specific learning rate set at \(0.0001\). \cite{loshchilov2019decoupled}
+To prevent overfitting and promote generalization, a dropout rate of
+\(20\,\mathrm{\%} \) is applied after each Rectified Linear Unit (ReLU) activation function.
+The neural network has \(71600\) trainable parameters.
+
+\subsubsection{CNN and ViT}
+\label{sec:CNN_and_ViT}
+
+We describe the CNN and Vision Transformer (ViT) architectures, as well as the data preprocessing and regularization used for their training.
+
+\paragraph{Architectures}
+\label{sec:Architecture_CNN}
+
+The classification experiments using convolutional networks were done with three classical network architectures (ResNet34 \cite{resnets}, ResNet50 \cite{resnets} and EfficientNet-B5 \cite{efficientnetv1}) and a customized architecture based on ResNet blocks.
+%
+Additionally, we used a model with a ViT architecture, ViT-B/16. \cite{ViT}
+%
+
+As inspiration for our own customized CNN, we took the paper by He et al., where such an architecture was developed for tasks in computer vision. \cite{resnets} As can be seen in \autoref{tab:model_params}, our custom CNN is much smaller than the classical architectures (ResNets and EfficientNet), which is preferable in terms of trainability and interpretability. The specific architecture of the customized CNN can be seen in \autoref{fig:model_architecture_custom_cnn}.
+
+\begin{table}[tb]
+    \caption{\label{tab:model_params} Number of trainable parameters for the different models.}
+    \begin{ruledtabular}
+    \begin{tabular}{l|cccccc}
+    Model & FNN & Custom CNN & ResNet34 & ResNet50 & EfficientNet-B5 & ViT-B/16 \\
+    \hline
+    Trainable Parameters & \num{71600} & \num{149354} & \num{21800242} & \num{25567282} & \num{30400034} & \num{85728773} \\
+    \end{tabular}
+    \end{ruledtabular}
+\end{table}
+
+\begin{figure}[tb]
+    \includegraphics[width=0.85\textwidth]{Fig7_Figure_model_architecture_custom_cnn_03.pdf}
+    \caption{\label{fig:model_architecture_custom_cnn}{Model architecture of the custom CNN.}}
+\end{figure}
+
+For details on the hardware and software refer to \autoref{sec:Hardware_software}.
+
+\paragraph{Data Preprocessing}
+\label{sec:Data_preprocessing_CNN}
+
+We adjust the data preprocessing pipeline compared to the one for the FNN model.
+%
+Since CNNs can handle larger input sizes easier than a fully connected neural network (due to shared parameters), we opt to use the spectrograms at full resolution.
+%
+Due to batching the data in training, all the spectrograms need to have the same resolution at the end of the pipeline, which we achieve via cropping and padding spectrograms to the same size. We avoid resizing which would probably make validation more difficult due to the additional distribution shift.
+
+Our data loading and preprocessing pipeline is shown in Figure \ref{fig:data_loading_custom_cnn}.
+
+\begin{figure}[tb]
+    \includegraphics[width=0.85\textwidth]{Fig8_Figure_data_loading_pipeline_custom_cnn_07.pdf}
+    \caption{\label{fig:data_loading_custom_cnn}{Data loading pipeline for the CNNs and ViT.}}
+\end{figure}
+%
+The five gray boxes describe transformations done in the training pipeline (augmentations are only used in training), and the yellow box is only executed in validation phase.
+
+The key features of this preprocessing are as follows. In the first step, we increase the bounds of the signal we obtained from the automatic detection by \(60\,\mathrm{ms}\) on both sides, extending the signal duration before and after the detected signal (this is to compensate for the random shift).
+%
+Then, we transform the signal into a 2D spectrogram and use both the original spectrogram and a spectrogram rescaled to a decibel scale (while clipping its lower end so that the entire spectrogram has a \(60\,\mathrm{dB}\) range). Both spectrograms are concatenated, i.e., merged into a single data block, and used as input for the network.
+%
+In order to improve robustness and to avoid overfitting, we then randomly translate the spectrograms by up to 10ms on the time axis as augmentation in the training cycle (we do not want the model to overfit on the position of the call, since the detection boundaries can vary).
+
+As previously mentioned, due to batching the data during training, all spectrograms need to be transformed into the same shape.
+%
+We do this by determining the mid-point in time of the spectrograms and by extracting the central part of the spectrograms, i.e. the data is center cropped to min ($\ell  -100$, $170$) with $\ell$ being the duration of the spectrograms in milliseconds (crop too long spectrograms to a maximum size of \(170\,\mathrm{ms}\)). The optimal duration was determined experimentally (see \autoref{fig:custom_cnn_acc_over_val_size}).
+%
+The mean is subtracted, and the data is divided by the standard deviation of the labeled dataset to normalize it.
+%
+After that, we use replication padding to pad the spectrograms to a length of \(190\,\mathrm{ms}\). At this point, all spectrograms have the same shape of \(2 \times 201 \times 190\), as required for batching.
+
+For the validation of the pipeline, the spectrograms are only center cropped to a length of 170, thus completing the pipeline.
+%
+For the training pipeline, we use additional data augmentations to improve robustness and avoid overfitting. 
+%
+We randomly rescale the spectrograms on the time axis between \(170\,\mathrm{ms}\) and \(220\,\mathrm{ms}\), then center crop them to \(150\,\mathrm{ms}\). We randomly translate them by -10 to 10 on the frequency axis and finally add Gaussian noise with a standard deviation of \(0.01\).
+
+Before we output the spectrograms, we stack the time feature into them as an additional channel (replicate the time feature value over all spatial positions), resulting in a final spectrogram shape of $3 \times 201 \times 170$ for validation, respectively $3 \times 201 \times 150$ for training.
+
+
+\paragraph{Training and Regularization}
+\label{sec:Training_and_regularization_CNN}
+
+For regularization, Adam with weight decay is used, with a default learning rate of 0.001 as optimizer. \cite{loshchilov2019decoupled} Label smoothing is also applied in the loss function, using 0.05 and 0.9 as targets instead of 0.0 and 1.0.
+%
+For the custom CNN, we additionally use twenty percent dropout after each activation function. Meaning that, for each element there is a \(20\,\mathrm{\%} \) chance that the value is set to zero. \cite{JMLR:v15:srivastava14a}
+%
+For the other models, we use their default settings, which means no dropout in ResNet34, ResNet50 and ViT and stochastic dropout of ResNet blocks in EfficientNet-B5 with a maximum probability of 0.2 (which gets linearly scaled by the layer of the model, so for a given layer the dropout probability would be $0.2 \cdot \frac{\text{layer id}}{\text{number of layers}}$).
+%
+The stochastic dropout in the EfficientNet-B5 model works for each row of the batch, i.e. an entire input is zeroed out.
+
+One of the reviewers pointed us to the excellent paper \cite{Koutini_2021}, which describes several aspects of optimizing network architectures for a wide range of audio problems. In particular, they focus on the notion of "maximal vs. effective receptive field (MRF vs. ERF)" and demonstrate that a large MRF, due to a high number of layers in CNNs, can actually deteriorate quality when applied to audio signals. This is well explained by the structure of typical spectrograms, which contain frequency-axis information unlike typical image processing tasks. This information is blurred if the MRF becomes too large. 
+
+In more detail, Koutini et al. demonstrate an optimal performance with an MRF of around 100 x 100 (see Table 2, Fig 2, 3, Koutini et al.). \cite{Koutini_2021} Our custom CNN falls within this range. It has 12 layers, 9 of them being 3x3 convolutions with stride 1, and 3 of them being 3x3 convolutions with stride 2. This results in an MRF of size 43 x 43. This size seems to be optimal for the specific task of USV analysis and is within the range of stable network architectures for general audio tasks when compared with the findings of Koutini et al.\cite{Koutini_2021}
+
+
+\section{Results}
+\label{sec:Results}
+
+In the following subsection, we present the results of the classification step, as the detection step has already been described in \autoref{sec:Segmentation-Detection}. We focus on the fully automated classification setting, where a set of USV recordings is provided as input, and the system outputs a list of individual calls along with their classifications. Additionally, we define the evaluation metrics used to assess performance.
+
+\subsection{Evaluation metrics for classification}
+\label{sec:Evaluation_metrics_for_classification}
+
+The quality of the different neural network architectures for the classification of neonatal USV calls are based on 10-fold cross-validation of 16 recordings from the C-dataset plus using the rest of the dataset for training.
+
+The usual quality measures (accuracy, recall, precision, specificity, F1-score) are computed for either class-wise classification or to determine an overall score. For class-wise classification, we treat our multi-class problem as a binary-class problem and determine the quality measures in a one-vs-all manner, i.e., for each class, we treat all the other classes as the same class. For example, true positives refer to the number of calls correctly assigned to this class, true negatives refer to all calls not in this class that were assigned to any other class, and similarly for false positives and false negatives. We then use the standard definitions:
+\begin{align*}
+    \text{Accuracy} &= \frac{\text{True Positives} + \text{True Negatives}}{\text{All}}\\
+    \text{Recall} &= \frac{\text{True Positives}}{\text{True Positives + False Negatives}}\\
+    \text{Specificity} &= \frac{\text{True Negatives}}{\text{True Negatives + False Positives}}\\
+    \text{Precision} &= \frac{\text{True Positives}}{\text{True Positives + False Positives}}\\
+    \text{F1-score} &= 2 \cdot \frac{\text{Precision} \cdot \text{Recall}}{\text{Precision + Recall}}
+\end{align*}
+The recall focuses on capturing all actual positive instances, while the specificity focuses on correctly identifying all actual negative instances.
+The precision penalizes false positives and the F1-score is a measure for the balance of precision and recall.
+
+We compute the overall accuracy as the ratio between correct predictions and all predictions, as previously described. \cite{Pessoa2022-sy, 10.7554/eLife.59161}
+%
+For the other values, we compute them per class in a one-vs-all manner and report the weighted mean over the classes, as previously described in Pessoa et al. \cite{Pessoa2022-sy}.
+
+The results are given in percent.
+
+
+\subsection{Classification results}
+\label{sec:Fully_automated_classification}
+
+To determine the most suitable architecture for analyzing USVs, we compared the performance of several neural networks, including the FNN, Custom CNN (with various preprocessing and downsampling approaches), ResNet34, ResNet50, EfficientNet-B5, and ViT. These networks vary not only in architectural design but also in model size, as detailed in Table \ref{tab:model_params}.
+A (*) next to the model name indicates that the smooth spectrograms were normalized individually in the data preprocessing pipeline (i.e. the mean of each smooth spectrogram gets set to 0 and the standard deviation to 1), as opposed to normalizing them over the global mean and standard deviation of all the smooth spectrograms in the C-dataset.
+
+As already mentioned, we use tenfold cross-validation for evaluation. Hence, for each network architecture, we trained ten models and evaluated them separately. For class-wise evaluation of each of these models, we compute accuracy, precision, recall, specificity, and F1-score, all in a binary one-vs-all approach.
+The global numbers reported for precision, recall, specificity and F1-score are then the weighted sums over all five classes, i.e. we weight the quality measures for each class by the number of samples in this class and sum them up. These values are averaged over all ten runs of the cross-validation, which also allows us to compute the variance over these ten runs.
+The global recall is the ratio of correct predictions to all predictions.
+The results are displayed in \autoref{tab:classification_results}.
+
+The EfficientNet-B5 model performs best, but with more than 30 million trainable parameters it is also the largest of the convolutional models we used.
+The vision transformer (ViT-B/16) does not perform well, which is sensible due to the low amount of data we have for training (vision transformer generally require larger amounts of training data compared to CNNs, in the original paper they were pretrained on a dataset consisting of 300 million images, whereas we only have 4374 spectrograms for training). \cite{ViT}
+For ViT-B/16, we rescaled the spectrograms to a final size of 160x160, as the image size needs to be a multiple of the patch size (16).
+The custom CNN performed similar to the EfficientNet-B5 with 149,000 trainable parameters. 
+
+We also tested the use of data augmentations and regularization for the custom CNN and found that they increase the recall by \(3.92\,\mathrm{\%}\) (in \ref{tab:classification_results}, "Custom CNN no aug reg" uses no augmentation or regularization and has \(3.92\,\mathrm{\%}\) lower recall than the original model). Additionally, downsampling the spectrogram to \(25 \times 8\) drastically reduces performance ("Custom CNN 25 $\times$ 8"), so we decided to use full spectrograms for classification with all CNNs. Not clipping dB values in the spectrograms ("Custom CNN no dB limit") slightly increased performance measures but resulted in higher variance; therefore, we included dB clipping. Also, duplicate channels did not yield better performance ("Custom CNN $\times$ 2 channels").
+
+The effectiveness and interpretability of the custom CNN were evaluated and validated using explainable artificial intelligence (XAI) techniques, such as saliency maps and channel visualizations (see \autoref{sec:Interpretability_of_the_custum_CNN}). Based on these findings, the architecture of the custom CNN was finalized as described in the previous section. The model achieved an average performance of \(86.79\,\%\), as reported in \autoref{tab:classification_results}. A class-wise analysis indicated no performance bias toward any specific class (\autoref{tab:classification_results_per_class}). Further details on the feedforward neural network (FNN) are provided in \autoref{tab:classes-metrics}.
+
+\begin{table}[tb]
+    \caption{\label{tab:classification_results} Results of the classification models, evaluated on the 10-fold cross validation test data.}
+    
+    \begin{ruledtabular}
+    \begin{tabular}{lccccc}
+        Model & Precision & Specificity & F1 Score & Accuracy \\
+    \hline
+    FNN & $78.14 \pm 2.48$ & $90.49 \pm 1.14$ & $77.14 \pm 2.61$ & $ 77.35 \pm 2.55$ \\
+    Custom CNN & $87.02 \pm 1.46$ & $94.68 \pm 1.21$ & $86.69 \pm 1.46$ & $86.79 \pm 1.45$ \\
+    Custom CNN no aug reg & $83.28 \pm 1.62$ & $93.09 \pm 1.79$ & $82.37 \pm 2.00$ & $82.86 \pm 1.75$ \\
+    Custom CNN no db limit & $87.24 \pm 2.71$ & $94.80 \pm 1.40$ & $67.76 \pm 2.80$ & $86.88 \pm 2.71$ \\
+    Custom CNN 25x8 & $70.03 \pm 2.64$ & $85.60 \pm 1.87$ & $68.75 \pm 2.34$ & $70.09 \pm 1.94$ \\
+    Custom CNN x2 channels & $86.81 \pm 1.62$ & $94.69 \pm 0.92$ & $86.41 \pm 1.69$ & $86.49 \pm 1.61$ \\
+    ResNet34 (*) & $86.75 \pm 1.24$ & $94.64 \pm 1.10$ & $86.21 \pm 1.42$ & $86.34 \pm 1.39$ \\
+    ResNet50 (*) & $87.27 \pm 1.51$ & $94.86 \pm 0.11$ & $86.80 \pm 1.43$ & $86.88 \pm 1.55$ \\
+    EfficientNet B5 (*) & $\textbf{87.58} \pm 1.43$ & $\textbf{95.27} \pm 0.07$ & $\textbf{87.21} \pm 1.35$ & $\textbf{87.28} \pm 1.36$ \\
+    Custom CNN (*) & $86.10 \pm 1.46$ & $94.34 \pm 1.00$ & $85.67 \pm 1.33$ & $85.84 \pm 1.35$ \\
+    ViT-B/16 (*) & $57.75 \pm 4.30$ & $76.45 \pm 2.89$ & $55.84 \pm 3.20$ & $61.89 \pm 2.38$ \\
+    \end{tabular}
+    \end{ruledtabular}
+    \end{table}
+
+\begin{table}[tb]
+    \caption{\label{tab:classification_results_per_class} Results of the custom CNN model shown per class, evaluated on the 10-fold cross validation test data. All the metrics (including Accuracy) in the Table are computed in a one vs all manner.}
+
+    \begin{ruledtabular}
+    \begin{tabular}{lccccc}
+     Class & Precision & Recall & Specificity & F1 Score & Accuracy  \\
+    \hline
+    1 & $78.07 \pm 5.68$ & $80.14 \pm 9.93$ & $96.50 \pm 1.41$ & $78.77 \pm 5.63$ & $94.39 \pm 1.75$ \\
+    2 & $89.41 \pm 3.13$ & $91.68 \pm 3.49$ & $91.36 \pm 3.00$ & $90.45 \pm 1.61$ & $91.55 \pm 1.37$ \\
+    3 & $85.17 \pm 5.84$ & $79.73 \pm 7.82$ & $97.47 \pm 1.32$ & $82.14 \pm 5.38$ & $94.83 \pm 1.65$ \\
+    4 & $86.05 \pm 9.58$ & $75.56 \pm 8.09$ & $98.75 \pm 1.19$ & $80.00 \pm 6.23$ & $96.92 \pm 1.19$ \\
+    5 & $89.39 \pm 3.25$ & $89.51 \pm 5.01$ & $97.39 \pm 0.78$ & $89.37 \pm 3.10$ & $95.88 \pm 0.97$ \\
+
+    \end{tabular}
+    \end{ruledtabular}
+\end{table}
+
+\subsection{Semi-automated USV analysis}
+\label{sec:Semi_automated_USV_analysis}
+
+The last layer of the network provides a pseudo-probability for each of the five classes, which can be used as a quality indicator to filter out calls where the algorithm is uncertain. The user can define a threshold \(p \in [0, 1]\) and accept the findings of the algorithm only if the pseudo-probability exceeds \(p\) for at least one class. For each value of \(p\), we determine the number of calls reaching pseudo-probabilities above the threshold and report the resulting recall. We have plotted the resulting curves in \autoref{fig:graph_prob}. Our goal was the \(80-90\) challenge, i.e., we aspired to classify \(80\,\mathrm{\%}\) of all calls automatically with a recall of at least \(90\,\mathrm{\%}\).
+
+To further examine the effects of limiting the evaluation to samples for which the neural network outputs a relatively high confidence, we developed the graphic shown in \autoref{fig:graph_prob}. First, let us focus on the histograms, shown in red and green, with their values represented on the left-hand y-axis. For a total of 21 equally spaced confidence intervals, we calculate the relative amount of samples with a prediction confidence falling into the given interval. This is done for correctly and incorrectly classified samples separately. It is evident that most correctly classified samples have a high confidence, and vice versa for the incorrectly classified calls.
+
+This motivates a confidence-dependent evaluation of the neural network, which represents a generalization of the aforementioned \(80-90\) challenge. To visualize this, we plot the recall (solid blue line) and the amount of data preserved (dashed blue line) in dependence on the pseudo-probability \(p\). For example, if all samples with a prediction confidence of less than \(0.6\) are omitted, \(81.7\,\mathrm{\%}\) of the data is left, for which the network reaches a recall of \(83.5\,\mathrm{\%}\).
+
+\begin{figure}[ht]
+    \includegraphics[width=1.0\textwidth]{Fig9_combined_marvin_histograms.png}
+    \caption{\label{fig:graph_prob}{Mean and standard deviation of the recall on the validation data of the 10-fold cross validation sets while ignoring the predictions with the lowest confidence. (Color online)}}
+\end{figure}
+
+In summary, the proposed data analysis pipeline is capable of selecting and classifying \(82.7\,\mathrm{\%} \) of all calls with a recall of \(90.4\,\mathrm{\%} \) (with a threshold of $p=0.7$). The remaining calls are separated and can be analyzed manually. In total, this allows an almost arbitrarily high recall while still saving a substantial time of manual labor.
+
+\section{Discussion}
+\label{sec:Discussion}
+
+In this paper, we developed two neural network architectures (FNN, custom CNN) for USV classification and compared them with much larger network architectures (several CNNs, Visual Transformer ViT).  The best results in terms of overall accuracy were achieved by the EfficientNet B5 architecture. However, ResNet50 and our custom CNN achieve a comparable accuracy which is within the range of \(0.5\,\mathrm{\%} \) of EfficientNet B5.
+
+Alternative architectures, such as ViT and FNN, did not achieve comparable performance levels. The reasons for these inferior results vary. ViT, a large and powerful and architecture, demands vast quantities of training data. In the present setting, overfitting to the relatively limited training data is nearly inevitable, hindering further improvements in training. As for FNN, we posit that the inherent but constrained translation invariance of the classification task, wherein slight shifts in signal frequency or timing do not alter classification outcomes, provides convolutional network architectures with a distinct advantage.
+
+Among the top architectures (EfficientNet B5, ResNet 50, custom CNN), we employ two additional criteria to determine the optimal network architecture for USV classification. Firstly, the variance observed across ten cross-validation runs provides insight into the robustness of each architecture. In this regard, both EfficientNet B5 and our custom CNN demonstrate superior stability and minimal variance. Secondly, we evaluate the potential for semi-automated classification. Both architectures achieve approximately \(89\,\mathrm{\%} \) classification accuracy with over \(90\,\mathrm{\%} \) precision. Consequently, EfficientNet B5 and the custom CNN yield comparable results. In conclusion, EfficientNet B5 and custom CNN achieve comparable results. Hence, we favor the smaller network, due to its more transparent architectures and the comparatively modest training times. As the data is spatially connected, CNNs are naturally well-suited for this type of analysis because spatial dependencies are directly incorporated into their architecture (through the 3x3 convolutional kernels). In contrast, FNNs and ViTs would need to learn these spatial relationships from scratch, making CNNs a more efficient choice for this task.
+
+In summary, our results indicate that CNNs with residual connections are a good architecture for this type of data, and we would recommend this architecture for further research.
+
+Let us comment on some further design decisions.
+We did extensive experiments with subsampled spectrograms, which lead to several conclusions. E.g. the FNN architectures allows a rather coarse subsampling of the time variable, indeed the best results were achieved with a downsampling to $48 \times8$ spectrograms. The same tendency is true for the custom CNN. In contrast, a finer discretization in frequency is necessary. We hypothesize that while different USVs may vary slightly in their dominant frequencies, the overall structure of the calls remains consistent over its duration. Thus, fine frequency resolution is needed, but temporal downsampling does not hamper classification quality. Saliency maps illustrate the importance of preserving fine details for CNNs (\autoref{sec:Saliency_Maps}), showing that the model focuses on the "skeleton" of the calls — the fine central line in the spectrogram — which becomes difficult to detect in blurred or downsampled signals.
+
+Also, the decision to separate detection and classification tasks can be questioned. However, this separation is necessary for a separate, focused analysis of the unique challenges in each task. For instance, the data preprocessing requirements differ significantly. Our refined preprocessing pipeline, tailored for the CNN network, emphasizes the critical nature of this initial step. 
+
+In addition, we would like to comment on some failed approaches. As already mentioned, we experimented with classification schemes reliant on hand-crafted feature vectors. Specifically, we adopted feature vectors utilized by Pessoa et al. \cite{Pessoa2022-sy} However, juvenile USVs are constantly evolving, making it harder to classify them using predefined parameters. Despite efforts to enhance the feature vectors by incorporating additional metrics like energy level ratios, we were unable to achieve accuracies surpassing \(80\,\mathrm{\%} \).
+
+Training of the networks, as described, used standard concepts such as Adam, but substantial tests runs were needed before finding the optimal setup for the optimization strategy. This was done by trial and error.
+
+Naturally, the presented study on deep learning concepts for USV classification is not complete. There are other recent concepts, which would be worthwhile to explore in this context. Networks incorporating attention mechanisms or contrastive learning for pre-clustering USV data, or recurrent networks that enable input of the entire USV recording and provide direct classification without a preliminary detection step, are relatively new, innovative, and potentially advantageous concepts. In this sense, our approach of comparing feed forward networks either based on the classical FNN or on CNN concepts is only a natural first step in the direction of developing optimal algorithms for the task at hand.
+
+\section{Conclusion}
+\label{sec:Conclusion}
+
+The presented research is the first systematic analysis of different deep learning architectures for classifying neonatal USVs. We tested several models and evaluated them using state-of-the-art methods for explainable AI. When integrated into a pipeline, our best algorithm can automatically classify calls with an accuracy of \(86.79\,\mathrm{\%}\). Additionally, we propose the confidence measure as a tool to personalize accuracy requirements and identify potentially misclassified calls.
+
+If this accuracy level is insufficient, we outlined a procedure to assess classification confidence, enabling the creation of a more accurately classified subset and reducing manual analysis effort. We also evaluated whether the artificial intelligence (AI) focuses on the essential aspects of the spectrogram and provided visual explanations of the classification patterns.
+
+We successfully demonstrated the quantitative and qualitative efficacy of our fully automated pipeline within a research context. In the recordings, from our autism-like mouse lines examined in this study, our pipeline revealed significant quantitative differences between wildtype and mutant mice. Specifically, as illustrated in \autoref{fig:USV_quant_R142L}, mutated animals exhibited considerably fewer vocalizations at P4 compared to their wildtype littermates (no difference was detected at P8 and P12). The detection algorithm not only demonstrated high reliability but is also fast and convenient to use. By combining different thresholds, we challenged the prevailing notion that AI models are necessary for the detection of USVs. \cite{Steinfath2021-pe} When benchmarked against the leading deep learning detection networks, the entropy-based detection method could compete for the best method (see \autoref{tab:benchmarking}).
+
+Moreover, the combined approach of detection and classification enabled us to uncover qualitative differences, such as distinct distributions of calls per class, at developmental stages (P8 and P12) where quantitative analysis alone failed to identify a phenotype, see \autoref{fig:USV_quant_R142Lp12} and \autoref{fig:USV_qual_R142Lp12} for details. Given the demonstrated capability of the algorithm to analyze subtle differences in pup USVs on a large scale, we will implement the algorithm for further USV analysis at the INBC in Heidelberg.
+
+In this paper, we have tested a variety of deep learning models. By comparing different models side by side and using elaborate XAI methods, we evaluated which network architecture is most suitable for analyzing USVs. For future endeavors, we are open to collaborating with other research teams tackling similar tasks in USV classification, thus broadening the scope of the proposed pipeline. We have indicated various avenues where emerging AI concepts like contrastive learning, attention mechanisms (Transformer) or temporal variation modeling (TimesNet) could enhance detailed analysis, though the necessity for such advancements remains to be seen. \cite{attention, timesnet}
+Additionally, we are keen on integrating expert knowledge, such as special MEL diagrams, which adjust the frequency scale according to mice perception, potentially enabling further refinement in analysis.
+
+In conclusion, we anticipate that our work will enrich the understanding of both the capabilities and constraints of AI in the analysis of USV data.
+
+
+\FloatBarrier
+
+\section{Supplementary Material}
+\label{sec:Supplementary_material}
+
+\begin{acknowledgments}
+\label{sec:Acknowledgements}
+
+We acknowledge the expert advice of Claudia Pitzer and Barbara Kurpiers from the Interdisciplinary Neurobehavioral Core in Heidelberg. R. Herdt is funded by the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) - project number 459360854 (DFG FOR 5347 Lifespan AI). P. Maass acknowledges the financial support by the Federal Ministry of Education and Research (BMBF) within the T!Raum project "MOIN - MUKIDerm".
+
+
+\end{acknowledgments}
+
+\section{Author Declarations}
+\label{sec:Author_declarations}
+The authors have no conflicts of interest to declare.
+This study was approved by the Governmental Council Karlsruhe (Project Number G172/21).
+The co-authors Herdt, Kinzel, Maaß and Walther contributed equally to this work. The authors Maass and Schaaf are the last authors.
+
+
+\section{Data Availability}
+\label{sec:Data_Avaliability}
+
+The data that support the findings of this study are openly available at https://doi.org/10.5281/zenodo.13376980.
+
+\section{Appendixes}
+\label{sec:Appendixes}
+
+\begin{table}[ht]
+    %Created: 2024-02-15.
+    \caption{Call class distribution in the manually classified C-Dataset.}\label{tab:datasets_overview}
+    \begin{ruledtabular}
+    \scriptsize
+    \begin{tabular}{lccccccc}
+       & call number & constant & modulated & step & simultaneous  & short\\
+  
+      \hline
+      C-Dataset & \(4575\) & \(766 \ (16.74\%)\) & \(1642 \ (35.89\%)\) & \(784 \ (17.14\%)\) & \(284 \ (6.21\%)\) & \(1103 \ (24.11\%)\)\\
+  
+    \end{tabular}
+    \end{ruledtabular}
+  \end{table}
+
+\subsection{Research example}
+\label{research_example}
+
+\begin{figure}[ht]
+    \includegraphics[width=0.\textwidth]{Fig10_p4.pdf}
+    \caption{\label{fig:USV_quant_R142L}{Quantitative differences in call number at P4, as detected by our segmentation algorithm.}}
+\end{figure}
+
+\begin{figure}[ht]
+    \includegraphics[width=0.5\textwidth]{Fig11_p12.pdf}
+    \caption{\label{fig:USV_quant_R142Lp12}{No quantitative differences in the call number at P12, as detected by our segmentation algorithm.}}
+\end{figure}
+
+\begin{figure}[ht]
+    \includegraphics[width=0.5\textwidth]{Fig12_ClassificationR142LP12.pdf}
+    \caption{\label{fig:USV_qual_R142Lp12}{Qualitative differences in the call categories at P12, as detected by our classification algorithm.}}
+\end{figure}
+
+\FloatBarrier
+
+\subsection{Detection algorithm benchmarking}
+\label{sec:benchmarking}
+
+The detection algorithm presented in this study was benchmarked against several publicly available detection algorithms, including Mouse Ultrasonic Profile ExTraction (MUPET), You Only Look Once Version 2 (YOLO V2), DeepAudioSegmenter (DAS), and Autoencoded Vocal Analysis (AVA) \cite{Coffey2019-ve, Van_Segbroeck2017-bz, Goffinet2021-ju, Steinfath2021-pe}. YOLO V2 is the updated version of the DeepSqueak detection algorithm. DAS, MUPET, and AVA are well-established algorithms in the field. 
+
+They were evaluated on potentially challenging recordings to assess their ability to accurately predict the start and end times of vocalizations. For comparison, Intersection over Union (IoU) was used to measure the overlap between the predicted start and end times and the ground truth annotations across different thresholds (ranging from 0.1 to 0.8). A prediction was considered accurate if the IoU with a ground truth was at least equal to the threshold; otherwise, it was classified as a false positive. Multiple predictions could correspond to a single ground truth, and the same ground truth could be matched multiple times. This evaluation framework allowed us to assess the precision and robustness of each algorithm under varying conditions. The analysis was conducted automatically to eliminate potential biases. The code and underlying data are available in our \href{https://github.com/Nemptis/Neonatal_USV_Detection_Classification.git}{GitHub} repository.
+
+\begin{table}[ht]
+
+    \caption{Comparison of previously described deep learning detection algorithms to the entropy based detection algorithm presented in this study. Mouse Ultrasonic Profile ExTraction (MUPET), You Only Look Once Version 2 (YOLO V2), DeepAudioSegmenter (DAS), Autoencoded Vocal Analysis (AVA) and our model presented in this paper. Values are given for the intersection over union threshold of 0.1.}\label{tab:benchmarking}
+    \begin{ruledtabular}
+    \begin{tabular}{lccccc}
+      & DeepSqueak & DAS & MUPET & AVA & Our model \\
+      \hline
+      True positives & 1150 & 369 & 1051 & 726 & \textbf{1148} \\
+      False positives & 192 & 102 & 190 & 353 & \textbf{103} \\
+      False negatives & 142 & 923 & 241 & 566 & \textbf{144} \\
+      Precision & \( 0.8569 \) & \( 0.7834 \) & \(0.8469\) & \(0.6728 \) & \( \textbf{0.9177} \) \\
+      Recall & \( 0.8901 \) & \( 0.2856 \) & \( 0.8135 \) & \(0.5619 \) & \( \textbf{0.8885} \) \\
+  
+    \end{tabular}
+    \end{ruledtabular}
+  \end{table}
+
+\FloatBarrier
+
+\subsection{Hardware and Software}
+\label{sec:Hardware_software}
+
+For the implementations of the neural networks we use the PyTorch library, and for setting up multi-GPU training we use the \href{https://github.com/Lightning-AI/lightning}{pytorch-lightning} library. \cite{paszke2019} To compute the saliency maps for interpreting the custom CNN we use the implementations of the captum library. \cite{kokhlikyan2020captum}
+%
+We use the implementation of the \href{https://github.com/pytorch/vision}{torchvision library} for the architectures of the ResNet34, ResNet50, EfficientNet-B5 \cite{efficientnetv1} and ViT-B/16 \cite{ViT}.
+%
+For the ResNet34, ResNet50 and EfficientNet-B5 we adjust the final fully connected layer (we input the time feature as an additional channel there).
+%
+All our experiments regarding the CNNs and the ViT were conducted on a Linux server with 8 Nvidia RTX 2080Ti GPUs. The experiments for the FNN were conducted on Windows with GTX 1080.
+
+
+\subsection{Interpretability of the Custom CNN}
+\label{sec:Interpretability_of_the_custum_CNN}
+
+In this section, we aim to analyze how the classification network reaches its decisions. We start by displaying channel visualizations of the different layers, followed by saliency maps that highlight which parts of the input the model relies on for its prediction.
+
+\subsubsection{Channel Visualization}
+
+Neural networks often suffer from poor interpretability regarding how they reach their decisions in classification tasks. For better interpretation, we aim to highlight the spectrogram structures relevant to different call classes. To this end, we compute the channel visualizations. Channel visualizations indicate which structures are analyzed at different channels. These visualizations serve as basic building blocks, and the output values of these channels can be interpreted as a measure of how strongly the input correlates with these structures. For a description of how the visualizations are computed see \autoref{sec:Channel_visualization_method}. For example, Figure \ref{fig:channel_resnet2} displays several channels that are tuned for analyzing constant, increasing, or decreasing frequency content. The channel at the bottom left seems to capture signals with a discontinuity in frequency. The multiplicity of similar channels might indicate that similar results could be achieved with a smaller network. However, these similar structures are combined with different follow-up structures in the subsequent layers, so this multiplicity is necessary for allowing a subtle analysis.
+
+\begin{figure}[ht]
+    \includegraphics[width=0.7\textwidth]{Fig13_Figure_resnet_block_02.jpg}
+    \caption{\label{fig:channel_resnet2}{Visualization of the activations in the 32 channels of the first layer of the network.}}
+\end{figure}
+
+The structures in the channel visualizations of the later layers become increasingly difficult to analyze. The channel visualizations for all layers of the network are depicted in \autoref{sec:Appendixes}.
+
+\FloatBarrier
+
+\subsubsection{Saliency Maps}
+\label{sec:Saliency_Maps}
+
+As a second approach for explaining how the network functions, we used saliency maps which are computed as follows. For a given input one determines how strongly every pixel contributes towards the final classification.
+
+As method to generate the saliency map, we use Integrated Gradients \cite{pmlr-v70-sundararajan17a} combined with SmoothGrad \cite{SmoothGrad}. For details, refer to \autoref{sec:Additional_saliency_method}.
+
+As examples, we plot the saliency maps for prototypical vocalizations for every class, see \autoref{fig:saliency_map}. As expected, a well-trained network looks at the prototypical shapes of the signal and focuses on the main frequencies at each time instant. It neglects e.g. the blurring in frequency and the background structures almost completely. We take this as a confirmation that the network is well-trained for the task at hand.
+
+\begin{figure}[ht]
+    \includegraphics[width=0.7\textwidth]{Fig14_Figure_cl1_2_3_4_5__data_saliency_map.jpg}
+    \caption{\label{fig:saliency_map}{Top row: input data for calls from different classes, the effect of the padding structure for normalizing the inputs to fixed dimensions are visible; bottom row: The resulting saliency maps show that the network indeed is looking at core structures of the signals and neglects the noise background. The calls classes are: constant, modulated, frequency step, composite and short call in that respective order.}}
+\end{figure}
+
+\FloatBarrier
+
+\subsection{Channel Visualization Method}
+\label{sec:Channel_visualization_method}
+
+First we compute the channel visualizations of the different layers. These visualizations are computed by activation maximization \cite{ActiviationMaximization} while utilizing transformation robustness as in \cite{olah2017feature}.
+
+\begin{figure}[ht]
+    \includegraphics[width=0.7\textwidth]{Fig20}
+    \caption{\label{fig:channel_visualization}{Visualize channel c from layer X of the model.}}
+\end{figure}
+
+    We synthesize those channel visualizations using iterative gradient descent, as shown in Figure \ref{fig:channel_visualization}.
+    %
+    As optimizer, we use Adam with a learning rate of 0.05. \cite{kingma_adam_2015}
+    %
+    We start from random Gaussian noise, and then iteratively update the image $z^{(i)}$ to maximize activation of the channel $c$.
+    %
+    To reduce noise and make the visualizations more interpretable, we use transformation robustness as in. \cite{olah2017feature}
+    %
+    This is depicted by the function $g$ in (*) in \ref{fig:channel_visualization}.
+    %
+    We randomly move the image by up to one pixel and randomly scale it between 0.9 and 1.1.
+    %
+    One problem with the generation of those visualizations is getting stuck in the initial initialization, if the initial image is not activating the channel $c$ (the channel $c$ being zero everywhere and therefore the gradient being zero and the image will never update).
+    %
+    To avoid this problem, for the first 16 iterations we change the backward pass of the final ReLU layer in $F_X$ to directly return the incoming gradient (i.e. we allow the gradient backwards even if the activation was zero in the forward pass).
+    %
+    Also, we only optimize the spectrogram, we keep the time feature fixed at the mean time of all the calls.
+
+\begin{figure}[ht]
+  
+    \includegraphics[width=0.9\textwidth]{Fig15_layer0.jpg}
+    \caption{\label{fig:channel_layer0}{Channel visualization of layer 0.}}
+    \end{figure}
+
+
+\begin{figure}[ht]
+    
+        \includegraphics[width=0.9\textwidth]{Fig16_layer1.jpg}
+        \caption{\label{fig:channel_layer1}{Channel visualization of layer 1.}}
+        \end{figure}
+\begin{figure}[ht]
+        \includegraphics[width=0.9\textwidth]{Fig17_layer2.jpg}
+        \caption{\label{fig:channel_layer2}{Channel visualization of layer 2.}}
+        \end{figure}
+
+\begin{figure}[ht]
+        \includegraphics[width=0.9\textwidth]{Fig18_linear_last.jpg}
+        \caption{\label{fig:channel_last linear}{Channel visualization of the last linear layer.}}
+        \end{figure}
+
+
+\FloatBarrier
+
+\subsection{Saliency maps Method}
+\label{sec:Additional_saliency_method}
+        
+We use five samples in SmoothGrad with a noise of standard deviation of 0.1 and 50 samples in Integrated Gradients.
+        %
+This means, we run Integrated Gradients five times, each time adding random noise with a standard deviation of 0.1 to the image, and return the mean of the five runs as the saliency map.
+        
+In Figure \ref{fig:saliency_map} we only plot the dB scale spectrogram, and the saliency map for it, and ignore the smooth spectrogram.
+        %
+This is due to the insight from Table \ref{tab:baselining_results}, which shows that the model does not rely on the smooth spectrogram for its prediction, but only on the dB scale spectrogram and somewhat on the time feature.
+
+\FloatBarrier
+
+\subsection{Feed forward network additional information}
+\label{FNN_additional_info}
+
+\begin{table}[ht]
+    \caption{Results of the FNN shown per class, evaluated on the 10-fold cross validation test data.}\label{tab:classes-metrics}
+    \begin{ruledtabular}
+    \begin{tabular}{lccccc}
+      Class & Precision & Recall & Specificity & F1 score & Accuracy\\
+  
+      \hline
+      all & \( 78.14 \pm 2.48 \) & \( 77.35 \pm 2.55 \) & \( 90.49 \pm 1.14 \) & \( 77.14 \pm 2.61 \) & \( 88.75 \pm 1.23 \)\\
+      1 & \( 60.38 \pm 7.98 \) & \( 63.41 \pm 6.65 \) & \( 93.60 \pm 2.25 \) & \( 61.58 \pm 6.69 \) & \( 89.67 \pm 2.45 \)\\
+      2 & \( 80.36 \pm 3.62 \) & \( 84.76 \pm 4.26 \) & \( 83.95 \pm 2.65 \) & \( 82.40 \pm 2.66 \) & \( 84.25 \pm 1.98 \)\\
+      3 & \( 76.10 \pm 9.14 \) & \( 65.99 \pm 8.33 \) & \( 96.30 \pm 1.62 \) & \( 70.47 \pm 7.75 \) & \( 91.80 \pm 1.97 \)\\
+      4 & \( 89.05 \pm 7.72 \) & \( 57.49 \pm 11.60 \) & \( 99.46 \pm 0.34 \) & \( 69.39 \pm 10.17 \) & \( 96.03 \pm 1.28 \)\\
+      5 & \( 79.48 \pm 6.84 \) & \( 86.90 \pm 2.50 \) & \( 94.52 \pm 1.80 \) & \( 82.82 \pm 3.39 \) & \( 92.95 \pm 1.18 \)\\
+  
+    \end{tabular}
+    \end{ruledtabular}
+  \end{table}
+
+\subsection{CNN additional information}
+\label{CNN_additional_info}
+
+\begin{figure}[ht]
+    \includegraphics[width=0.9\textwidth]{Fig19_Figure_val_acc_over_val_size__150_train_size.png}
+    \caption{\label{fig:custom_cnn_acc_over_val_size}{Mean accuracy on the validation data of the 10-fold cross validation sets over the duration in ms of the spectrograms. For both the custom CNN and the EfficientNet-B5 the maximum accuracy of 86.79 respectively 87.28 is reached at a size of 170(ms), whereas the training size was 150(ms).}}
+    \end{figure}
+
+\begin{table}[ht]
+        \caption{\label{tab:baselining_results} Accuracy of the custom CNN when 'removing' inputs, evaluated on the 10-fold cross validation test data.}
+    
+        \begin{ruledtabular}
+        \begin{tabular}{l|cccc}
+         Model & Original & Remove smooth spec & Time feature to avg & Remove db spec \\
+        \hline
+        Accuracy &  $86.79 \pm 1.45$ & $86.54 \pm 1.52$ & $82.76 \pm 2.19$ & $38.91 \pm 11.88$
+        \end{tabular}
+        \end{ruledtabular}
+\end{table}
+
+\FloatBarrier
+
+%\cite{ActiviationMaximization}
+\section{refs}
+%bibliographic style or numerical style
+\bibliography{usv_paper_bib}
+%\bibliography{usv_paper_bib_peter}
+
+
+\end{document}
