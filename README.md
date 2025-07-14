@@ -6,6 +6,12 @@ This repository contains algorithms designed for detecting and classifying neona
 Paper: 
 [Enhancing the analysis of murine neonatal ultrasonic vocalizations: Development, evaluation, and application of different mathematical models](https://doi.org/10.48550/arXiv.2405.12957).
 
+Code for the trained models can be found here
+<a href="https://doi.org/10.5281/zenodo.15880588"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.15880588.svg" alt="DOI"></a>
+
+Code for USV files can be found here
+<a href="https://doi.org/10.5281/zenodo.13376980"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.13376980.svg" alt="DOI"></a>
+
 
 # Environment Setup
 
